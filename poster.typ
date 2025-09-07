@@ -1,5 +1,4 @@
 
-
 #set page(
   paper: "a4",
   flipped: true,
@@ -15,6 +14,8 @@
 
 #show heading.where(level: 1): text.with(size: 3em)
 #show heading.where(level: 2): text.with(size: 2em)
+#show heading.where(level: 3): text.with(size: 1.7em)
+
 
 #let data = json(bytes(sys.inputs.at("data", default: ```{
     "date" : "13/12/2023", 
@@ -37,15 +38,7 @@
   ).display("[weekday] [day] [month repr:long]")
 }
 
-#let (
-  date,
-  start,
-  end,
-  room,
-  name,
-  desc,
-  logo
-) = data
+#let (date, start, end, room, name, desc, logo) = data
 
 #block(
   fill: white,
@@ -54,15 +47,17 @@
   radius: 7%,
 )[
   #grid(
-    rows: (1fr, 1fr, 1fr, 10%),
+    // stroke: 1pt + red,
+    rows: (2fr, 1fr, 2fr, 10%),
   
+    // Content
     grid(columns: (15%, 1fr, 15%),
       image(logo),
       heading(level: 1)[#name],
       image("logo_gpul.svg")
     ),
-    [ == #date de #start a #end \ Aula #room - Facultade de Informática ],
+    [ === #date de #start a #end \ Aula #room - Facultade de Informática ],
     [ == #desc ],
-    [ == Siguenos en redes sociales: #strong("@gpul_") ]
+    [ === Siguenos en redes sociales: #strong("@gpul_") ]
   )
 ]
