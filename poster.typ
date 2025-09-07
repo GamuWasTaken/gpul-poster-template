@@ -16,21 +16,36 @@
 #show heading.where(level: 1): text.with(size: 3em)
 #show heading.where(level: 2): text.with(size: 2em)
 
-//
-// {
-//   date: "13/12/2023",
-//   room: "2.10",
-//   name: "patata",
-//   desc: "con salsa",
-//   logo: "bevy.png"
-// }
-//
-#let input = sys.inputs.data
-// #let date = datetime(json.decode(input).date)
-#let (day, month, year) = json.decode(input).date.split("/")
-#let date = datetime(day: int(day), month: int(month), year: int(year))
+#let data = json(bytes(sys.inputs.at("data", default: ```{
+    "date" : "13/12/2023", 
+    "start": "13:30",
+    "end" : "14:30",
+    "room" : "2.10",
+    "name" : "Arquitectura ECS con Bevy como ejemplo",
+    "desc" : "Una forma no oop friendly para crear aplicaciones complejas de forma clara, sencilla y extensible. Con Bevy game engine en Rust para un desarrollo anti boilerplate",
+    "logo" : "logo_bevy.svg"
+  }```.text
+)))
 
-#let date = date.display("[weekday] [day] [month repr:long]")
+#{
+  // Parsing the date
+  let (day, month, year) = data.date.split("/")
+  data.date = datetime(
+      day: int(day),
+      month: int(month),
+      year: int(year)
+  ).display("[weekday] [day] [month repr:long]")
+}
+
+#let (
+  date,
+  start,
+  end,
+  room,
+  name,
+  desc,
+  logo
+) = data
 
 #block(
   fill: white,
@@ -39,19 +54,15 @@
   radius: 7%,
 )[
   #grid(
-    rows: (1fr, 1fr, 1fr, 10%)
-  )[
-  #grid(columns: (15%, 1fr, 15%),
-    image("logo_bevy.svg"),
-    heading(level: 1)[Arquitectura ECS con Bevy como ejemplo],
-    image("logo_gpul.svg")
+    rows: (1fr, 1fr, 1fr, 10%),
+  
+    grid(columns: (15%, 1fr, 15%),
+      image(logo),
+      heading(level: 1)[#name],
+      image("logo_gpul.svg")
+    ),
+    [ == #date de #start a #end \ Aula #room - Facultade de Informática ],
+    [ == #desc ],
+    [ == Siguenos en redes sociales: #strong("@gpul_") ]
   )
-  ][    
-    == #date de 18:30 a 20:30
-    == Aula 2.10 - Facultade de Informática
-  ][
-    == Una forma no oop friendly para crear aplicaciones complejas de forma clara, sencilla y extensible. Con Bevy game engine en Rust para un desarrollo anti boilerplate
-  ][
-    == Siguenos en redes sociales: #strong("@gpul_")
-  ]
 ]
